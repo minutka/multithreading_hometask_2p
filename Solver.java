@@ -6,10 +6,10 @@ import java.util.concurrent.TimeUnit;
 public class Solver {
     private int[] array;
     private ArrayList<Integer> smallArray = new ArrayList<Integer>();
-    private ArrayList<Integer> bigArray = new ArrayList<Integer>();
+    ArrayList<Integer> bigArray = new ArrayList<Integer>();
     ArrayList<Integer> bigArrayCopy;
     ArrayList<Integer> result;
-
+    int smallArrayCounter = 0;
 
     Solver(int[] array) {
         this.array = array;
@@ -119,6 +119,44 @@ public class Solver {
                         bigArrayCopy.remove(bigArray.get(j));
                     }
                 }
+            }
+        }
+    }
+
+    void syncDivide(int M) throws InterruptedException {
+        ExecutorService es = Executors.newFixedThreadPool(M);
+        for (int i = 0; i < M; i++) {
+            es.execute(new syncThread(i));
+        }
+        es.shutdown();
+        while(!es.awaitTermination(2L, TimeUnit.MINUTES)) {
+            System.out.println("not yet...");
+        }
+    }
+
+    int getSmallArrayCounter(){
+        synchronized (this) {
+            return smallArrayCounter;
+        }
+    }
+
+    class syncThread implements Runnable {
+        int tn;
+
+        public syncThread(int tn) {
+            super();
+            this.tn = tn;
+        }
+
+        public void run() {
+            System.out.println((tn + 1) + "nd/th thread starts...");
+            while(getSmallArrayCounter() < smallArray.size()) {
+                for (int i = 0; i < bigArray.size(); i++){
+                    if ((bigArray.get(i) % smallArray.get(getSmallArrayCounter())) == 0){
+                        bigArray.remove(bigArray.get(i));
+                    }
+                }
+                smallArrayCounter++;
             }
         }
     }

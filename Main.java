@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        int N = 1000;
+        int N = 100;
         int M = 4;
         int[] array = new int[N];
         Solver solver = new Solver(array);
@@ -8,9 +8,13 @@ public class Main {
         solver.fill();
         solver.solve();
         //solver.divideTo(M);
-        solver.oddDivideTo(M);
+        //solver.oddDivideTo(M);
         //solver.poolConfigurator(M);
-        for (int i : solver.bigArrayCopy){
+        solver.syncDivide(M);
+        /*for (int i : solver.bigArrayCopy){
+            System.out.println(i);
+        }*/
+        for (int i : solver.bigArray){
             System.out.println(i);
         }
         double end = System.nanoTime();
