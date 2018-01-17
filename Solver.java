@@ -151,9 +151,9 @@ public class Solver {
         public void run() {
             System.out.println((tn + 1) + "nd/th thread starts...");
             while(getSmallArrayCounter() < smallArray.size()) {
-                for (int i = 0; i < bigArray.size(); i++){
-                    if ((bigArray.get(i) % smallArray.get(getSmallArrayCounter())) == 0){
-                        bigArray.remove(bigArray.get(i));
+                for (int i = 0; i < bigArray.size(); i++){                                      //using foreach thrown ConcurrentModificationException
+                    if ((bigArray.get(i) % smallArray.get(getSmallArrayCounter())) == 0){       // << using element for foreach instead of bigArray.get(i)
+                        bigArray.remove(bigArray.get(i));                                       // https://habrahabr.ru/post/325426/
                     }
                 }
                 smallArrayCounter++;
